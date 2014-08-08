@@ -57,7 +57,7 @@ public class BlackHole {
 	 */
 	public static void main(String[] args) {
 		try {
-			parseArgs(args);
+			parseArgs(args);//配置默认路径
 		} catch (ParseException e1) {
 			logger.warn("parse args error");
 		}

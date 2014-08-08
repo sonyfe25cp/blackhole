@@ -1,5 +1,6 @@
 #!/bin/bash
-HOME_DIR=/usr/local/blackhole
+#HOME_DIR=/usr/local/blackhole
+HOME_DIR=/Users/omar/workspace/blackhole/server
 PATH=$PATH:$HOME_DIR
 export PATH
 JVM_OPTION=""
