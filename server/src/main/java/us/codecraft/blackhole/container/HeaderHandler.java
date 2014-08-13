@@ -1,5 +1,7 @@
 package us.codecraft.blackhole.container;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Flags;
 import org.xbill.DNS.Record;
@@ -11,7 +13,7 @@ import org.xbill.DNS.Section;
  */
 @Component
 public class HeaderHandler implements Handler {
-
+	static Logger logger = LoggerFactory.getLogger(HeaderHandler.class);
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -20,6 +22,7 @@ public class HeaderHandler implements Handler {
 	 */
 	@Override
 	public boolean handle(MessageWrapper request, MessageWrapper response) {
+		logger.info("win");
 		response.getMessage().getHeader().setFlag(Flags.QR);
 		if (request.getMessage().getHeader().getFlag(Flags.RD)) {
 			response.getMessage().getHeader().setFlag(Flags.RD);

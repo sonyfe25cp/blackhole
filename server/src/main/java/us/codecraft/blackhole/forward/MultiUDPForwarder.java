@@ -60,10 +60,10 @@ public class MultiUDPForwarder implements Forwarder {
 	@Override
 	public void forward(byte[] queryBytes, Message query,
 			List<SocketAddress> hosts, UDPConnectionResponser responser) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("forward query " + query.getQuestion().getName() + "_"
-					+ query.getHeader().getID());
-		}
+//		if (logger.isDebugEnabled()) {
+//			logger.debug("forward query " + query.getQuestion().getName() + "_"
+//					+ query.getHeader().getID());
+//		}
 		// send to all address
 
         int initCount = hosts.size();
@@ -79,7 +79,7 @@ public class MultiUDPForwarder implements Forwarder {
 					send(queryBytes, host);
 					logger.debug("forward query "
 							+ query.getQuestion().getName() + "_"
-							+ query.getHeader().getID());
+							+ query.getHeader().getID() +" to "+ host.toString());
 				}
 			} catch (IOException e) {
 				logger.warn("error", e);

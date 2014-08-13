@@ -19,7 +19,7 @@ import java.io.IOException;
 public class QueryProcesser {
 
     @Autowired
-    private HandlerManager handlerManager;
+    private HandlerManager handlerManager;//包含多种处理器
 
     private Logger logger = Logger.getLogger(getClass());
 
@@ -35,7 +35,7 @@ public class QueryProcesser {
         }
         MessageWrapper responseMessage = new MessageWrapper(new Message(query
                 .getHeader().getID()));
-        for (Handler handler : handlerManager.getPreHandlers()) {
+        for (Handler handler : handlerManager.getPreHandlers()) {//各种过滤器挨个处理
             boolean handle = handler.handle(new MessageWrapper(query),
                     responseMessage);
             if (!handle) {

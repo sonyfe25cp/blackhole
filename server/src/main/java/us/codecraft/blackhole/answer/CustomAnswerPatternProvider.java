@@ -1,13 +1,5 @@
 package us.codecraft.blackhole.answer;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.xbill.DNS.Address;
-import org.xbill.DNS.Type;
-import us.codecraft.blackhole.context.RequestContext;
-import us.codecraft.blackhole.utils.DoubleKeyMap;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,6 +7,16 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.xbill.DNS.Address;
+import org.xbill.DNS.Type;
+
+import us.codecraft.blackhole.context.RequestContext;
+import us.codecraft.blackhole.utils.DoubleKeyMap;
 
 /**
  * Read the config to domainPatterns and process the request record.
@@ -24,7 +26,6 @@ import java.util.regex.Pattern;
  */
 @Component
 public class CustomAnswerPatternProvider implements AnswerProvider {
-
 
     //TODO:domainPatternsContainer
     private volatile DoubleKeyMap<String, Pattern, String> domainPatterns = new DoubleKeyMap<String, Pattern, String>(new ConcurrentHashMap<String, Map<Pattern, String>>(), LinkedHashMap.class);

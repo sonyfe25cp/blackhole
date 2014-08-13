@@ -18,9 +18,9 @@ import java.util.regex.Pattern;
  */
 public class ZonesPattern {
 
-    private String userIp;
+    private String userIp;//不知道做啥用的
 
-    private String targetIp;
+    private String targetIp;//目标IP
 
     private List<Pattern> patterns = new ArrayList<Pattern>();
 
@@ -64,11 +64,11 @@ public class ZonesPattern {
         if (line.startsWith("#")) {
             return null;
         }
-        if (line.contains(":")) {
+        if (line.contains(":")) {//这是用于什么情况的？待查
             String userIp = StringUtils.trim(StringUtils.substringBefore(line, ":"));
             zonesPattern.setUserIp(userIp);
-            line = StringUtils.trim(StringUtils.substringAfter(line, ":"));
             Address.getByAddress(userIp);
+            line = StringUtils.trim(StringUtils.substringAfter(line, ":"));
         }
         String[] items = line.split("[\\s_]+");
         if (items.length < 2) {

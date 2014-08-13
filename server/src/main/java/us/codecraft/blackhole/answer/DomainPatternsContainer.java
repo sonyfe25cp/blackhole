@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author yihua.huang@dianping.com <br>
  * @date: 13-7-15 <br>
@@ -12,6 +15,8 @@ import java.util.regex.Pattern;
  */
 public class DomainPatternsContainer {
 
+	static Logger logger = LoggerFactory.getLogger(DomainPatternsContainer.class);
+	
     private volatile Map<Pattern, String> domainPatterns = new HashMap<Pattern, String>();
 
     private volatile Map<String, String> domainTexts = new HashMap<String, String>();
@@ -35,6 +40,7 @@ public class DomainPatternsContainer {
     public String getIp(String domain) {
         String ip = domainTexts.get(domain);
         if (ip != null) {
+        		logger.info("get "+ domain+" from the presettings");
             return ip;
         }
         for (Map.Entry<Pattern, String> entry : domainPatterns.entrySet()) {

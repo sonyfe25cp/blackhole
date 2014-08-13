@@ -1,11 +1,14 @@
 package us.codecraft.blackhole.answer;
 
-import org.springframework.stereotype.Component;
-import us.codecraft.blackhole.context.RequestContext;
-import us.codecraft.blackhole.utils.DoubleKeyMap;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import us.codecraft.blackhole.context.RequestContext;
+import us.codecraft.blackhole.utils.DoubleKeyMap;
 
 /**
  * @author yihua.huang@dianping.com
@@ -13,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Component
 public class CustomTempAnswerProvider implements AnswerProvider {
-
+	static Logger logger = LoggerFactory.getLogger(CustomTempAnswerProvider.class);
 	private Map<String,DoubleKeyMap<String, Integer, String>> container;
 
 	public CustomTempAnswerProvider() {

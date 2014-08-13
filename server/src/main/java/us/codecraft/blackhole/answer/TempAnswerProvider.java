@@ -1,9 +1,12 @@
 package us.codecraft.blackhole.answer;
 
-import org.springframework.stereotype.Component;
-import us.codecraft.blackhole.utils.DoubleKeyMap;
-
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import us.codecraft.blackhole.utils.DoubleKeyMap;
 
 /**
  * @author yihua.huang@dianping.com
@@ -13,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TempAnswerProvider implements AnswerProvider {
 
 	private DoubleKeyMap<String, Integer, String> container;
-
+	static Logger logger = LoggerFactory.getLogger(TempAnswerProvider.class);
 	public TempAnswerProvider() {
 		container = new DoubleKeyMap<String, Integer, String>(
 				ConcurrentHashMap.class);
@@ -28,6 +31,7 @@ public class TempAnswerProvider implements AnswerProvider {
 	 */
 	@Override
 	public String getAnswer(String query, int type) {
+		logger.info("win");
 		return container.get(query, type);
 	}
 

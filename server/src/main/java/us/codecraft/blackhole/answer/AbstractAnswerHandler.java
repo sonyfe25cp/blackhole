@@ -1,17 +1,20 @@
 package us.codecraft.blackhole.answer;
 
-import org.apache.log4j.Logger;
-import org.xbill.DNS.DClass;
-import org.xbill.DNS.Record;
-import org.xbill.DNS.Section;
-import org.xbill.DNS.Type;
-import us.codecraft.blackhole.container.Handler;
-import us.codecraft.blackhole.container.MessageWrapper;
-import us.codecraft.blackhole.utils.RecordBuilder;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xbill.DNS.DClass;
+import org.xbill.DNS.Name;
+import org.xbill.DNS.Record;
+import org.xbill.DNS.Section;
+import org.xbill.DNS.Type;
+
+import us.codecraft.blackhole.container.Handler;
+import us.codecraft.blackhole.container.MessageWrapper;
+import us.codecraft.blackhole.utils.RecordBuilder;
 
 /**
  * @author yihua.huang@dianping.com <br>
@@ -22,7 +25,7 @@ public abstract class AbstractAnswerHandler implements Handler {
 
     protected abstract List<AnswerProvider> getaAnswerProviders();
 
-    protected Logger logger = Logger.getLogger(getClass());
+    protected Logger logger = LoggerFactory.getLogger(AbstractAnswerHandler.class);
 
     // b._dns-sd._udp.0.129.37.10.in-addr.arpa.
     private final Pattern filterPTRPattern = Pattern
@@ -46,10 +49,10 @@ public abstract class AbstractAnswerHandler implements Handler {
     @Override
     public boolean handle(MessageWrapper request, MessageWrapper response) {
         Record question = request.getMessage().getQuestion();
-        String query = question.getName().toString();
+        String host = question.getName().toString();//请求的域名
         int type = question.getType();
         if (type == Type.PTR) {
-            query = filterPTRQuery(query);
+            host = filterPTRQuery(host);
         }
         // some client will query with any
         if (type == Type.ANY) {
@@ -57,10 +60,13 @@ public abstract class AbstractAnswerHandler implements Handler {
         }
         if (logger.isDebugEnabled()) {
             logger.debug("query \t" + Type.string(type) + "\t"
-                    + DClass.string(question.getDClass()) + "\t" + query);
+                    + DClass.string(question.getDClass()) + "\t" + host);
         }
+        logger.debug("host:{}, type:{}, DClass:{}", new String[]{host, type+"", question.getDClass()+""});
         for (AnswerProvider answerProvider : getaAnswerProviders()) {
-            String answer = answerProvider.getAnswer(query, type);
+            String answer = answerProvider.getAnswer(host, type);
+            String className = answerProvider.getClass().getName();
+            logger.debug("{} get answer :{}", className, answer);
             if (answer != null) {
                 try {
                     Record record = new RecordBuilder()

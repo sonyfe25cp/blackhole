@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 public class UDPConnectionResponser {
 
@@ -28,29 +29,40 @@ public class UDPConnectionResponser {
 	public void response(byte[] response) {
 
 		try {
-
+			logger.error("u1");
 			if (response == null) {
+				logger.error("no answer is coming here?");
 				return;
 			}
+			logger.error("u2");
 			DatagramPacket outdp = new DatagramPacket(response,
 					response.length, inDataPacket.getAddress(),
 					inDataPacket.getPort());
 
+			InetAddress address = inDataPacket.getAddress();
+			if(address!= null){
+				logger.info(address.toString());
+			}else{
+				logger.error("u2.5 null");
+			}
 			outdp.setData(response);
 			outdp.setLength(response.length);
 			outdp.setAddress(inDataPacket.getAddress());
 			outdp.setPort(inDataPacket.getPort());
+			
 
 			try {
 				socket.send(outdp);
+				logger.error("u3");
 			} catch (IOException e) {
 
 				logger.debug("Error sending UDP response to "
 						+ inDataPacket.getAddress() + ", " + e);
+				logger.error("u4");
 			}
 
 		} catch (Throwable e) {
-
+			logger.error("u5");
 			logger.warn(
 					"Error processing UDP connection from "
 							+ inDataPacket.getSocketAddress() + ", ", e);

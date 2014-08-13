@@ -1,6 +1,7 @@
 package us.codecraft.blackhole.answer;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Address;
@@ -14,10 +15,11 @@ import org.xbill.DNS.Type;
  */
 @Component
 public class AnswerPatternProvider implements AnswerProvider {
+	
 
 	private DomainPatternsContainer domainPatternsContainer = new DomainPatternsContainer();
 
-	private Logger logger = Logger.getLogger(getClass());
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * When the address configured as "DO_NOTHING",it will not return any
@@ -38,26 +40,28 @@ public class AnswerPatternProvider implements AnswerProvider {
 	 * int)
 	 */
 	@Override
-	public String getAnswer(String query, int type) {
+	public String getAnswer(String host, int type) {
 		if (type == Type.PTR) {
 			return null;
 		}
-		String ip = domainPatternsContainer.getIp(query);
+		String ip = domainPatternsContainer.getIp(host);
 		if (ip == null || ip.equals(DO_NOTHING)) {
 			return null;
 		}
 		if (type == Type.MX) {
-			String fakeMXHost = fakeMXHost(query);
+			String fakeMXHost = fakeMXHost(host);
 			tempAnswerContainer.add(fakeMXHost, Type.A, ip);
 			return fakeMXHost;
 		}
 		if (type == Type.CNAME) {
-			String fakeCNAMEHost = fakeCNAMEHost(query);
+			String fakeCNAMEHost = fakeCNAMEHost(host);
 			tempAnswerContainer.add(fakeCNAMEHost, Type.A, ip);
 			return fakeCNAMEHost;
 		}
 		try {
-			tempAnswerContainer.add(reverseIp(ip), Type.PTR, query);
+			String reverseIp = reverseIp(ip);
+			logger.debug("reverseIp:{}", reverseIp);
+			tempAnswerContainer.add(reverseIp(ip), Type.PTR, host);//增加一条反查ptr记录
 		} catch (Throwable e) {
 			logger.info("not a ip, ignored");
 		}

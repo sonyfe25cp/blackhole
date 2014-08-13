@@ -1,9 +1,12 @@
 package us.codecraft.blackhole.answer;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Type;
+
 import us.codecraft.blackhole.antipollution.SafeHostManager;
 import us.codecraft.blackhole.config.Configure;
 
@@ -13,7 +16,7 @@ import us.codecraft.blackhole.config.Configure;
  */
 @Component
 public class SafeHostAnswerProvider implements AnswerProvider {
-
+	static Logger logger = LoggerFactory.getLogger(SafeHostAnswerProvider.class);
 	@Autowired
 	private SafeHostManager safeBoxService;
 
@@ -29,6 +32,7 @@ public class SafeHostAnswerProvider implements AnswerProvider {
 	 */
 	@Override
 	public String getAnswer(String query, int type) {
+		logger.info("safe host win");
 		if (!configure.isEnableSafeBox()) {
 			return null;
 		}

@@ -43,6 +43,9 @@ public class PreAnswerHandler extends AbstractAnswerHandler implements Initializ
 		regitestProviders();
 	}
 
+	/**
+	 * 增加处理过滤器
+	 */
 	public void regitestProviders() {
 		answerProviders = new LinkedList<AnswerProvider>();
 		answerProviders.add(customTempAnswerProvider);
