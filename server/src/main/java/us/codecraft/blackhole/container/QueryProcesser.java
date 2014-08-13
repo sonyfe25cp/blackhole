@@ -26,8 +26,9 @@ public class QueryProcesser {
     @Autowired
     private CacheManager cacheManager;
 
-    public byte[] process(byte[] queryData) throws IOException {
-        Message query = new Message(queryData);
+//    public byte[] process(byte[] queryData) throws IOException {
+    public byte[] process(Message query) throws IOException {
+//        Message query = new Message(queryData);
         if (logger.isDebugEnabled()) {
             logger.debug("get query "
                     + query.getQuestion().getName().toString());

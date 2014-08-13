@@ -33,7 +33,7 @@ public class Configure {
 
 	private boolean useCache = true;
 
-	private int threadNum = 4;
+	private int threadNum = Runtime.getRuntime().availableProcessors();//原来是4
 
 	private static String configFilename;
 

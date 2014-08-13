@@ -1,12 +1,13 @@
 package us.codecraft.blackhole.connector;
 
+import java.net.DatagramPacket;
+
 import org.apache.log4j.Logger;
 import org.xbill.DNS.Message;
+
 import us.codecraft.blackhole.container.QueryProcesser;
 import us.codecraft.blackhole.context.RequestContextProcessor;
 import us.codecraft.blackhole.forward.Forwarder;
-
-import java.net.DatagramPacket;
 
 public class UDPConnectionWorker implements Runnable {
 
@@ -33,14 +34,18 @@ public class UDPConnectionWorker implements Runnable {
 
 		try {
 
-            RequestContextProcessor.processRequest(inDataPacket);
-			byte[] response = queryProcesser.process(inDataPacket.getData());
+			RequestContextProcessor.processRequest(inDataPacket);// 记录请求的ip地址
+			Message query = new Message(inDataPacket.getData());
+			String clientIP = inDataPacket.getAddress().getHostAddress();
+			String host = query.getQuestion().getName().toString();
+			logger.info(clientIP+ " want to visit " + host);
+			byte[] response = queryProcesser.process(query);
+			// byte[] response = queryProcesser.process(inDataPacket.getData());
 			if (response != null) {
 				responser.response(response);
 			} else {
-                Message query = new Message(
-                        inDataPacket.getData());
-                forwarder.forward(query.toWire(), query, responser);
+				// Message query = new Message(inDataPacket.getData());
+				forwarder.forward(query.toWire(), query, responser);
 			}
 		} catch (Throwable e) {
 
