@@ -32,7 +32,6 @@ public class SafeHostAnswerProvider implements AnswerProvider {
 	 */
 	@Override
 	public String getAnswer(String query, int type) {
-		logger.info("safe host win");
 		if (!configure.isEnableSafeBox()) {
 			return null;
 		}

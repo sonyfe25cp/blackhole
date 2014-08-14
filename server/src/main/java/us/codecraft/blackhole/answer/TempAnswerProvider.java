@@ -31,7 +31,6 @@ public class TempAnswerProvider implements AnswerProvider {
 	 */
 	@Override
 	public String getAnswer(String query, int type) {
-		logger.info("win");
 		return container.get(query, type);
 	}
 

@@ -88,24 +88,25 @@ public class ForwardAnswerProcessor {
 					cacheManager.setResponseToCache(message, answer);
 				}
 			} else {//没有找到对应的ip地址
-				//创建私有404的dns解析//还有bug...
 				String host = message.getQuestion().getName().toString();
-				logger.debug("{} is parsed to {}", host, "10.0.1.2");
-				Record record = new RecordBuilder().dclass(1)
-						.name(message.getQuestion().getName()).answer("10.0.1.2").type(Type.A).toRecord();
-				message.addRecord(record, Section.ANSWER);
-				forwardAnswer.getResponser().response(answer);
-				cacheManager.setResponseToCache(message, answer);
+				//创建私有404的dns解析
+				//还有bug...
+//				logger.debug("{} is parsed to {}", host, "10.0.1.2");
+//				Record record = new RecordBuilder().dclass(1)
+//						.name(message.getQuestion().getName()).answer("10.0.1.2").type(Type.A).toRecord();
+//				message.addRecord(record, Section.ANSWER);
+//				forwardAnswer.getResponser().response(answer);
+//				cacheManager.setResponseToCache(message, answer);
 				
 				/**
 				 * 下面是原来的内容
 				 */
-//				forwardAnswer.setTempAnswer(message);
-//				if (forwardAnswer.getCountDown() <= 0) {
-//					forwardAnswer.getResponser().response(answer);
-//					forwardAnswer.setTempAnswer(null);
-//					logger.info("it's time to redirect the 404");
-//				}
+				forwardAnswer.setTempAnswer(message);
+				if (forwardAnswer.getCountDown() <= 0) {
+					forwardAnswer.getResponser().response(answer);
+					forwardAnswer.setTempAnswer(null);
+					logger.info("it's time to redirect {} to {} ", host, "fake server");
+				}
 			}
 		}
 	}

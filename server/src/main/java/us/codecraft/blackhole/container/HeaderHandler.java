@@ -22,7 +22,6 @@ public class HeaderHandler implements Handler {
 	 */
 	@Override
 	public boolean handle(MessageWrapper request, MessageWrapper response) {
-		logger.info("win");
 		response.getMessage().getHeader().setFlag(Flags.QR);
 		if (request.getMessage().getHeader().getFlag(Flags.RD)) {
 			response.getMessage().getHeader().setFlag(Flags.RD);

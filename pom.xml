@@ -6,6 +6,6 @@
   <version>0.0.1-SNAPSHOT</version>  
   <modules>  
     <module>wifesays</module>  
-    <module>server/</module>  
+    <module>server</module>  
   </modules>  
 </project>

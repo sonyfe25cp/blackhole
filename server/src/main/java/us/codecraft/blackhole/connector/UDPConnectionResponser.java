@@ -29,21 +29,21 @@ public class UDPConnectionResponser {
 	public void response(byte[] response) {
 
 		try {
-			logger.error("u1");
+			logger.debug("u1");
 			if (response == null) {
 				logger.error("no answer is coming here?");
 				return;
 			}
-			logger.error("u2");
+			logger.debug("u2");
 			DatagramPacket outdp = new DatagramPacket(response,
 					response.length, inDataPacket.getAddress(),
 					inDataPacket.getPort());
 
 			InetAddress address = inDataPacket.getAddress();
 			if(address!= null){
-				logger.info(address.toString());
+				logger.debug(address.toString());
 			}else{
-				logger.error("u2.5 null");
+				logger.debug("u2.5 null");
 			}
 			outdp.setData(response);
 			outdp.setLength(response.length);
@@ -53,7 +53,7 @@ public class UDPConnectionResponser {
 
 			try {
 				socket.send(outdp);
-				logger.error("u3");
+				logger.debug("u3");
 			} catch (IOException e) {
 
 				logger.debug("Error sending UDP response to "
@@ -62,7 +62,7 @@ public class UDPConnectionResponser {
 			}
 
 		} catch (Throwable e) {
-			logger.error("u5");
+			logger.debug("u5");
 			logger.warn(
 					"Error processing UDP connection from "
 							+ inDataPacket.getSocketAddress() + ", ", e);
