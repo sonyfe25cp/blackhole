@@ -3,7 +3,7 @@
   <groupId>us.codecraft</groupId>  
   <artifactId>blackhole-module</artifactId>  
   <packaging>pom</packaging>  
-  <version>0.0.1-SNAPSHOT</version>  
+  <version>1.2.2</version>  
   <modules>  
     <module>wifesays</module>  
     <module>server</module>  
