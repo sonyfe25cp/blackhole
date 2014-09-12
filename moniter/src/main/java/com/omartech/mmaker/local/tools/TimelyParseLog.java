@@ -13,12 +13,16 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.omartech.mmaker.model.DNSLog;
 import com.omartech.mmaker.utils.Utils;
 
 public class TimelyParseLog {
 
+	static Logger logger = LoggerFactory.getLogger(TimelyParseLog.class);
+	
 	public static void main(String[] args) {
 //		String filePath = "/Users/omar/data/log20140817";
 		String filePath = "/tmp/log";
@@ -33,6 +37,9 @@ public class TimelyParseLog {
 		Utils.sortMapStringAndInteger(array2);
 		Utils.debugEntryArray(array1);
 		Utils.debugEntryArray(array2);
+		for(Entry<String, Integer> entry : array2){
+			System.out.println("['"+entry.getKey()+"',"+entry.getValue()+"],");
+		}
 	}
 
 	Map<String, Integer> statMostFavorSite(List<DNSLog> loglist) {
@@ -85,31 +92,35 @@ public class TimelyParseLog {
 
 	static DNSLog parseLog(String line) {
 		DNSLog log = null;
-		// Matcher matcher = pattern.matcher(line);
-		// if(matcher.find()){
-		// String requestIp = matcher.group(0);
-		// String host = matcher.group(1);
-		// log = new DNSLog(requestIp, host);
-		// }
-
 		String time = line.substring(0, line.indexOf(","));
 		String sub = line.substring(line.lastIndexOf("#") + 1);
-//		System.out.println(sub);
 		String after = sub.replace("want to visit ", "");
 		String[] split = after.trim().split(" ");
 		String requestIp = split[0];
 		String host = split[1];
+		boolean userful = isUserful(host);
 		log = new DNSLog(requestIp, host);
+		log.setUserful(userful);
 		try {
 			Date requestTime = DateUtils.parseDate(time, "yy-MM-dd hh:mm:ss");
 			log.setTime(requestTime);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
 		return log;
 	}
 
+	static boolean isUserful(String host){
+		String[] split = host.split(".");
+		logger.info("size : {}", split.length);
+		if(split.length < 3){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	
 	// public static void main(String[] args) {
 	// String str =
 	// "14-08-13 10:00:34,553 INFO  us.codecraft.blackhole.connector.UDPConnectionWorker(UDPConnectionWorker.java:41) ## 123.116.51.53 want to visit videolectures.net.";

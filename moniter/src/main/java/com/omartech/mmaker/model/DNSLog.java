@@ -10,9 +10,7 @@ public class DNSLog {
     private String host;
     private String answerIp;
     private Date time;
-    
-    
-    
+    private boolean userful;//网站类型还是各种api
     
     public DNSLog(String requestIp, String host) {
         super();
@@ -69,4 +67,12 @@ public class DNSLog {
     public void setTime(Date time) {
         this.time = time;
     }
+
+	public boolean isUserful() {
+		return userful;
+	}
+
+	public void setUserful(boolean userful) {
+		this.userful = userful;
+	}
 }
