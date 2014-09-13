@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
+	<title>上网情况监督仪</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
   <script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
   <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
   <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/exporting.js"></script>
@@ -13,7 +15,7 @@
             plotShadow: false
         },
         title: {
-            text: 'Browser market shares at a specific website, 2010'
+            text: '${title}  时间:${date}'
         },
         tooltip: {
     	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -34,7 +36,7 @@
             type: 'pie',
             name: 'Browser share',
             data: [
-                ${pieJson}
+                ${json}
             ]
         }]
     });

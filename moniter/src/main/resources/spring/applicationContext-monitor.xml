@@ -11,8 +11,8 @@
 	<context:component-scan base-package="com.techwolf.mmaker" />
 
 	<beans>
-			<bean id="boot" class="com.omartech.mmaker.BootMachine">
-			</bean>
+		<bean id="boot" class="com.omartech.mmaker.BootMachine">
+		</bean>
 		<bean id="configure" class="com.omartech.mmaker.utils.SystemVar">
 			<property name="logFolder" value="/tmp/blackhole/logs/"></property>
 			<property name="htmlFolder" value="/tmp/html"></property>

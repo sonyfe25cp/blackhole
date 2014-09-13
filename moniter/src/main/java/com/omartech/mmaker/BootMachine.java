@@ -12,10 +12,10 @@ import com.omartech.mmaker.utils.SystemVar;
 public class BootMachine {
 	
 	@Autowired
-	SystemVar sv;
+	SystemVar systemVar;
 	
 	void testSV(){
-		String logFolder = sv.getLogFolder();
+		String logFolder = systemVar.getLogFolder();
 		System.out.println(logFolder);
 	}
 	

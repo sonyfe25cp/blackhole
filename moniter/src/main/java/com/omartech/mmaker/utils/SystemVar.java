@@ -1,7 +1,9 @@
 package com.omartech.mmaker.utils;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
+@Component
 @Configuration
 public class SystemVar {
 
