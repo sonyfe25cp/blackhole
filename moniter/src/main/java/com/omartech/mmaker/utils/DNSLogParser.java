@@ -79,7 +79,7 @@ public class DNSLogParser {
 	public static boolean isUserful(String host) {
 		String[] split = host.split("\\.");
 //		logger.info("size : {}", split.length);
-		if (split.length < 3) {
+		if (split.length == 2) {
 			if(host.startsWith("+")){
 				System.out.println(host);
 				return false;
