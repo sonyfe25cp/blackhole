@@ -50,7 +50,9 @@
       	  var url = window.location.href;
       	  if(url.endWith(".ips.html")){
 		      var hour=new Date().getHours();
-		      $('#hours').append("<legend>按时间分割</legend>");
+		      if(hour > 0){
+		      	$('#hours').append("<legend>按时间分割</legend>");
+		      }
 		      for(var i = hour; i >0; i --){
 		         var b = i-1;
 		     	 var curl = url.replace('.ips.html', '-'+b+'-ips.html');
@@ -59,7 +61,9 @@
 		      }
       	  }else if(url.endWith(".sites.html")){
       	  	var hour=new Date().getHours();
-		      $('#hours').append("<legend>按时间分割</legend>");
+		      if(hour > 0){
+		      	$('#hours').append("<legend>按时间分割</legend>");
+		      }
 		      for(var i = hour; i >0; i --){
 		        var b = i-1;
 	      	  	var curl = url.replace('.sites.html', '-'+b+'-sites.html');
@@ -67,8 +71,6 @@
 		      	$('#hours').append(link);
 		      }
       	  }
-      	  
-      	  
       });
      	
       </script>
