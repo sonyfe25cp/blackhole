@@ -1,3 +1,33 @@
+##备忘
+
+1. 拷贝静态资源
+
+2. 开启nginx，指定文件夹
+	全局参数设置：
+	user  nobody;                               ＃＃使用普通帐号nobody启动服务＃＃
+	worker_processes  8;                   ＃＃工作进程设置＃＃
+	error_log  logs/error.log;
+	pid        logs/nginx.pid;
+	events { 
+	    worker_connections  5000;        ＃＃每worker_processes进程的最大连接数＃＃
+	    use epoll;                                  ＃＃使用epoll＃＃
+	}
+	http{ }项参数设置:
+	server_names_hash_bucket_size 64;  ＃＃当设置多个虚拟主机sever时，需增大此参数，默认32＃
+	server_tokens	off;                         ＃＃禁止显示nginx软件的版本号＃＃
+	sendfile	     on;
+	tcp_nodelay       on;
+	keepalive_timeout  30;
+	server {
+        listen       80;
+        server_name  monitor.com ;
+        charset utf-8;
+        root   /opt/webmonitor ;
+        index  index.html index.htm;
+       }
+3. 测试静态文件生成
+
+
 ##逻辑
 
 1. dns 日志按照小时切割
@@ -26,7 +56,7 @@
 
 3. dns垃圾数据过滤
 
-4. 各网页对应页面
+4. 各网页对应页面 √
 
 5. 自动打包脚本
 

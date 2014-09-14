@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.omartech.mmaker.model.DNSLog;
 import com.omartech.mmaker.utils.DNSLogParser;
+import com.omartech.mmaker.utils.SystemVar;
 import com.omartech.mmaker.utils.Utils;
 
 public class TimelyParseLog {
@@ -33,35 +34,36 @@ public class TimelyParseLog {
 		Utils.sortMapStringAndInteger(array2);
 		Utils.debugEntryArray(array1);
 		Utils.debugEntryArray(array2);
-		for (Entry<String, Integer> entry : array2) {
+		for (Entry<String, Integer> entry : array1) {
 			System.out.println("['" + entry.getKey() + "'," + entry.getValue()
 					+ "],");
 		}
 	}
 
 	
-	public String mostFavorSiteJson(List<DNSLog> loglist){
+	/**
+	 * 按照站点分布的pie图
+	 */
+	public Map<String, Integer> mostFavorSiteJson(List<DNSLog> loglist){
 		logger.debug("loglist.size : {}", loglist.size());
 		Map<String, Integer> map = statMostFavorSite(loglist, true);
-		List<Entry<String, Integer>> array1 = new ArrayList<>(
-				map.entrySet());
-		Utils.sortMapStringAndInteger(array1);
-		Utils.debugEntryArray(array1);
-		StringBuilder sb =new StringBuilder();
-		for (Entry<String, Integer> entry : array1) {
-			sb.append("['" + entry.getKey() + "'," + entry.getValue()
-					+ "],");
-		}
-		if(sb.length() > 0){
-			sb.setLength(sb.length() -1);
-		}
-		return sb.toString();
+		return map;
 	}
-	
+	/**
+	 * 按照请求IP分布的PIE图
+	 * @param loglist
+	 * @return
+	 */
+	public Map<String, Integer> mostFavorIpJson(List<DNSLog> loglist){
+		logger.debug("loglist.size : {}", loglist.size());
+		Map<String, Integer> map = statMostRequestIP(loglist);
+		return map;
+	}
+
 	public Map<String, Integer> statMostFavorSite(List<DNSLog> loglist, boolean filter) {
 		Map<String, Integer> map = new HashMap<>();
 		for (DNSLog log : loglist) {
-			if(filter && log.isUserful()){
+			if(filter && log.isUseful()){
 				String host = log.getHost();
 				Integer integer = map.get(host);
 				if (integer == null) {

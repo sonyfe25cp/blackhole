@@ -2,3 +2,4 @@ server/log
 .project
 .settings/
 .classpath
+.DS_Store

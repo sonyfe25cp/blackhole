@@ -3,14 +3,14 @@ package com.omartech.mmaker.model;
 import java.util.Date;
 
 
-public class DNSLog {
+public class DNSLog{
     
     private int id;
     private String requestIp;
     private String host;
     private String answerIp;
     private Date time;
-    private boolean userful;//网站类型还是各种api
+    private boolean useful;//网站类型还是各种api
     
     public DNSLog(String requestIp, String host) {
         super();
@@ -68,11 +68,12 @@ public class DNSLog {
         this.time = time;
     }
 
-	public boolean isUserful() {
-		return userful;
+	public boolean isUseful() {
+		return useful;
 	}
 
-	public void setUserful(boolean userful) {
-		this.userful = userful;
+	public void setUseful(boolean useful) {
+		this.useful = useful;
 	}
+
 }

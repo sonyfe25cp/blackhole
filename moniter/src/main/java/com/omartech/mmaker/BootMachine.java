@@ -15,7 +15,7 @@ public class BootMachine {
 	SystemVar systemVar;
 	
 	void testSV(){
-		String logFolder = systemVar.getLogFolder();
+		String logFolder = systemVar.logFolder;
 		System.out.println(logFolder);
 	}
 	

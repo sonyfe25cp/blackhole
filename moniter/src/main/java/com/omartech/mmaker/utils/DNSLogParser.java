@@ -53,9 +53,10 @@ public class DNSLogParser {
 		String[] split = after.trim().split(" ");
 		String requestIp = split[0];
 		String host = split[1];
+		host = host.substring(0, host.length()-1);
 		boolean userful = isUserful(host);
 		log = new DNSLog(requestIp, host);
-		log.setUserful(userful);
+		log.setUseful(userful);
 		try {
 			Date requestTime = DateUtils.parseDate(time, "yy-MM-dd hh:mm:ss");
 			log.setTime(requestTime);
