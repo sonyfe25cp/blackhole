@@ -66,11 +66,26 @@ public class DNSLogParser {
 		return log;
 	}
 
+	/**
+	 * 只要两截的域名
+	 * 开头带+的域名请求是什么？
+	 * +css-tricks.com
+	 * +getbootstrap.com
+	 * +ghbtns.com
+	 * +github.com
+	 * @param host
+	 * @return
+	 */
 	public static boolean isUserful(String host) {
 		String[] split = host.split("\\.");
 //		logger.info("size : {}", split.length);
 		if (split.length < 3) {
-			return true;
+			if(host.startsWith("+")){
+				System.out.println(host);
+				return false;
+			}else{
+				return true;
+			}
 		} else {
 			return false;
 		}
