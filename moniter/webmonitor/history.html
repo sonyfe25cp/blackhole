@@ -22,11 +22,11 @@
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <script src="/js/html5shiv.min.js"></script>
+      <script src="/js/respond.min.js"></script>
     <![endif]-->
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
     <script src="/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script src="/js/docs.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
@@ -77,6 +77,7 @@
 <script>
 $(document).ready(function(){
 	var today = formatDate(new Date());
+	$('#todayNetWork').attr('href', "/pages/day/"+today+"/"+today+".stats.html");
 	$('#todayShangwang').attr('href', "/pages/day/"+today+"/"+today+".sites.html");
 	$('#todayIp').attr('href', "/pages/day/"+today+"/"+today+".ips.html");
 });
@@ -91,8 +92,8 @@ $(document).ready(function(){
   </ul>
   
   <ul class="nav nav-sidebar">
-    <li><a href="">按网站搜索</a></li>
-    <li><a href="">按ip搜索</a></li>
+    <li><a href="/ips-history.html">IP历史数据</a></li>
+    <li><a href="/sites-history.html">网络历史数据</a></li>
     <!--
     <li><a href="">One more nav</a></li>
     <li><a href="">Another nav item</a></li>
@@ -106,13 +107,56 @@ $(document).ready(function(){
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-      <div class="jumbotron">
-        <h1>没有找到该条记录</h1>
-        <p>由于该时间段没有响应的上网记录，所以没有对应的上网分析。</p>
-      </div>
-    </div>
-  </div>
-</div>
+    
+    <script>
+	$(document).ready(
+		function(){
+		
+		    var now = new Date();
+		    var thismonth = now.getMonth()+1;
+		    var today = now.getDate();
+		    var year = now.getFullYear();
+		    
+		    var html = "";
+		    
+		    for(var i = thismonth ; i > 0; i --){
+		    	
+		    	var end = 31;
+		    
+		    	if( i == thismonth){
+		    		end = today;
+		    	}
+		    	
+		    	var tmp_html = "<tr><td>"+i+"</td><td>";
+		    	
+		    	for(var j = 1; j <= end; j ++){
+		    	
+		    		var month = i < 10 ? "0"+i: i;
+		    		var day = j < 10 ? "0"+j : j;
+		    		
+		    		var ht = FreeMarker template error:
+The following has evaluated to null or missing:
+==> hrefType  [in template "history.ftl" at line 34, column 44]
 
-  </body>
-</html>
+Tip: If the failing expression is known to be legally null/missing, either specify a default value with myOptionalVar!myDefault, or use <#if myOptionalVar??>when-present<#else>when-missing</#if>. (These only cover the last step of the expression; to cover the whole expression, use parenthessis: (myOptionVar.foo)!myDefault, (myOptionVar.foo)??
+
+The failing instruction (FTL stack trace):
+----------
+==> ${hrefType}  [in template "history.ftl" at line 34, column 42]
+----------
+
+Java stack trace (for programmers):
+----------
+freemarker.core.InvalidReferenceException: [... Exception message was already printed; see it above ...]
+	at freemarker.core.InvalidReferenceException.getInstance(InvalidReferenceException.java:98)
+	at freemarker.core.EvalUtil.coerceModelToString(EvalUtil.java:382)
+	at freemarker.core.Expression.evalAndCoerceToString(Expression.java:115)
+	at freemarker.core.DollarVariable.accept(DollarVariable.java:76)
+	at freemarker.core.Environment.visit(Environment.java:265)
+	at freemarker.core.MixedContent.accept(MixedContent.java:93)
+	at freemarker.core.Environment.visit(Environment.java:265)
+	at freemarker.core.Environment.process(Environment.java:243)
+	at freemarker.template.Template.process(Template.java:277)
+	at com.omartech.mmaker.local.tools.SiteMaker.write2HomePage(SiteMaker.java:72)
+	at com.omartech.mmaker.local.tools.SiteMaker.homePage(SiteMaker.java:58)
+	at com.omartech.mmaker.local.tools.SiteMaker.main(SiteMaker.java:31)

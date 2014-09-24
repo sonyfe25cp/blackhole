@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/images/favicon.ico">
+
+    <title>Dashboard Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/bootstrap-3.2.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/dashboard.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="/js/html5shiv.min.js"></script>
+      <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="/js/jquery.min.js"></script>
+    <script src="/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script src="/js/docs.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="/js/ie10-viewport-bug-workaround.js"></script>
+    
+    <script>
+    function   formatDate(now)   {   
+	  var   year=now.getYear();  
+	  var   month=now.getMonth()+1;   
+	  var   date=now.getDate();   
+	  var   hour=now.getHours();
+	  date = date < 10 ? "0"+date : date;
+	  month = month < 10 ? "0"+month : month;
+	  return "2014-"+month+"-"+date;   
+	}
+    </script>
+    
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">网络监控仪</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <!--
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Help</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+          -->
+        </div>
+      </div>
+    </div>
+<script>
+$(document).ready(function(){
+	var today = formatDate(new Date());
+	$('#todayNetWork').attr('href', "/pages/day/"+today+"/"+today+".stats.html");
+	$('#todayShangwang').attr('href', "/pages/day/"+today+"/"+today+".sites.html");
+	$('#todayIp').attr('href', "/pages/day/"+today+"/"+today+".ips.html");
+	
+	
+	
+	var url = window.location.href;
+    
+    if(/.*overview\.html$/.test(url)){
+    	$('li.active').removeClass('active');
+    	$('#l1').addClass('active');
+    }
+    if(/.*\.stats\.html$/.test(url)){
+    	$('li.active').removeClass('active');
+    	$('#l2').addClass('active');
+    }
+    if(/.*ips\.html$/.test(url)){
+    	$('li.active').removeClass('active');
+    	$('#l3').addClass('active');
+    }
+    if(/.*sites\.html$/.test(url)){
+    	$('li.active').removeClass('active');
+    	$('#l4').addClass('active');
+    }
+    if(/.*ips-history\.html$/.test(url)){
+    	$('li.active').removeClass('active');
+    	$('#h1').addClass('active');
+    }
+    if(/.*sites-history\.html$/.test(url)){
+    	$('li.active').removeClass('active');
+    	$('#h2').addClass('active');
+    }
+    if(/.*about\.html$/.test(url)){
+    	$('li.active').removeClass('active');
+    	$('#c1').addClass('active');
+    }
+    if(/.*contact\.html$/.test(url)){
+    	$('li.active').removeClass('active');
+    	$('#c2').addClass('active');
+    }
+	
+	
+});
+</script>
+
+<div class="col-sm-3 col-md-2 sidebar">
+  <ul class="nav nav-sidebar">
+    <li id='l1'><a href="/overview.html">系统说明</a></li>
+    <li id='l2'><a href="#" id="todayNetWork">今日网络访问报告</a></li>
+    <li id='l3'><a href="#" id="todayIp">今日IP访问报告</a></li>
+    <li id='l4'><a href="#" id="todayShangwang">今日网站访问报告</a></li>
+  </ul>
+  
+  <ul class="nav nav-sidebar">
+    <li id='h1'><a href="/ips-history.html">历史IP访问数据</a></li>
+    <li id='h2'><a href="/sites-history.html">历史网站访问数据</a></li>
+    <!--
+    <li><a href="">One more nav</a></li>
+    <li><a href="">Another nav item</a></li>
+    <li><a href="">More navigation</a></li>
+    -->
+  </ul>
+    <ul class="nav nav-sidebar">
+    <li id="c1"><a href="/about.html">关于我们</a></li>
+    <li id="c2"><a href="/contact.html">联系我们</a></li>
+  </ul></div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    
+    <script>
+	$(document).ready(
+		function(){
+		
+		    var now = new Date();
+		    var thismonth = now.getMonth()+1;
+		    var today = now.getDate();
+		    var year = now.getFullYear();
+		    
+		    var html = "";
+		    
+		    for(var i = thismonth ; i > 0; i --){
+		    	
+		    	var end = 31;
+		    
+		    	if( i == thismonth){
+		    		end = today;
+		    	}
+		    	
+		    	var tmp_html = "<tr><td>"+i+"月</td><td>";
+		    	
+		    	for(var j = 1; j <= end; j ++){
+		    	
+		    		var month = i < 10 ? "0"+i: i;
+		    		var day = j < 10 ? "0"+j : j;
+		    		
+		    		var ht = "ips";
+		    		
+		    		var tmp_day =  year + "-" + month +"-" + day;
+		    		
+		    		var link = "/pages/day/" + tmp_day + "/" + tmp_day + "." + ht + ".html";
+		    		
+		    		var line = "<a href='"+link+"' class='btn btn-info' style='margin-bottom:2px; margin-right:2px'>" + year + "-" + month +"-" + day +"</a>";
+		    		
+		    		tmp_html += line;
+		    		
+		    	}
+		    	tmp_html += "</td></tr>";
+		    	
+		    	html += tmp_html;
+		    }
+	    $('#pastdays').append(html);
+		
+		}
+	);    
+    
+    
+    </script>
+    
+    	<h3>IP地址历史访问数据</h3>
+    
+		<table id = 'pastdays' class='table'>
+			<tr>
+				<td style='width:60px;'>月份</td>
+				<td>日期</td>
+			</tr>
+		</table>
+	
+	</div>
+
+    
+    </div>
+  </div>
+</div>
+
+  </body>
+</html>
