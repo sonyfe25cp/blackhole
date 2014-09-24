@@ -5,8 +5,8 @@
   <div class="row">
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
       
-        <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
-  		<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/exporting.js"></script>
+        <script type="text/javascript" src="/js/highcharts.js"></script>
+  		<script type="text/javascript" src="/js/exporting.js"></script>
          <script>
 	    $(function () {
 	    $('#pieContainer').highcharts({
@@ -46,35 +46,38 @@
       <div id="pieContainer" style="min-width:700px;height:400px"></div>
       
       <script>
+      
       $(document).ready(function(){
       	  var url = window.location.href;
-      	  if(url.endWith(".ips.html")){
+      	  if(/.*\.ips\.html$/.test(url)){
 		      var hour=new Date().getHours();
 		      if(hour > 0){
 		      	$('#hours').append("<legend>按时间分割</legend>");
 		      }
 		      for(var i = hour; i >0; i --){
 		         var b = i-1;
-		     	 var curl = url.replace('.ips.html', '-'+b+'-ips.html');
+		         var tb = b < 10 ?("0"+b ):b;
+		     	 var curl = url.replace('.ips.html', '-'+tb+'-ips.html');
 		      	var link = "<div class='col-md-2' style='margin-bottom:2px;'><a href="+curl+" class='btn btn-warning'>"+i+":00 -- "+b+":00<a></div>";
 		      	$('#hours').append(link);
 		      }
-      	  }else if(url.endWith(".sites.html")){
+      	  }else if(/.*\.sites\.html$/.test(url)){
       	  	var hour=new Date().getHours();
 		      if(hour > 0){
 		      	$('#hours').append("<legend>按时间分割</legend>");
 		      }
 		      for(var i = hour; i >0; i --){
 		        var b = i-1;
-	      	  	var curl = url.replace('.sites.html', '-'+b+'-sites.html');
+		        var tb = b < 10 ?("0"+b ):b;
+	      	  	var curl = url.replace('.sites.html', '-'+tb+'-sites.html');
 		      	var link = "<div class='col-md-2' style='margin-bottom:2px;'><a href="+curl+" class='btn btn-warning'>"+i+":00 -- "+b+":00<a></div>";
 		      	$('#hours').append(link);
 		      }
+      	  }else{
       	  }
       });
      	
       </script>
-      
       <div id="hours" class="row">
       </div>
       <legend>详情</legend>
