@@ -20,11 +20,14 @@
             text: 'Source: 系统统计'
         },
         xAxis: {
+        	title :{
+	        	text :'时间'    
+            },
             categories: [${dates}]
         },
         yAxis: {
             title: {
-                text: 'Temperature (°C)'
+                text: '个数'
             }
         },
         tooltip: {
