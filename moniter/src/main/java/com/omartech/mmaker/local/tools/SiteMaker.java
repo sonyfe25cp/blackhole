@@ -21,45 +21,57 @@ import freemarker.template.TemplateException;
 
 /**
  * 用于生成站点目录及相应页面
+ * 
  * @author Chen Jie
  * @date 2014年9月14日
  */
 public class SiteMaker {
 
 	public static void main(String[] args) {
-		SiteMaker sm =  new SiteMaker();
+		SiteMaker sm = new SiteMaker();
 		sm.homePage();
 	}
-	
-	void run(){
-		
+
+	void run() {
+
 	}
-	
+
 	/**
 	 * 
 	 */
-	void about(){
+	void about() {
 		Gson gson = new Gson();
 		String resouce = Utils.getResouce("texts/homepage");
 		HomePage homepage = gson.fromJson(resouce, HomePage.class);
-		
+
 	}
-	
+
 	/**
-	 * 生成首页
+	 * 生成各个页面
 	 */
-	void homePage(){
+	public void homePage() {
 		Gson gson = new Gson();
 		String resouce = Utils.getResouce("texts/homepage");
 		HomePage homepage = gson.fromJson(resouce, HomePage.class);
-		write2HomePage("homepage.ftl", "index.html", DateFormatUtils.format(new Date(), "yyyy-MM-dd"), homepage);
-		write2HomePage("aboutUs.ftl", "about.html", DateFormatUtils.format(new Date(), "yyyy-MM-dd"), homepage);
-		write2HomePage("contactUs.ftl", "contact.html", DateFormatUtils.format(new Date(), "yyyy-MM-dd"), homepage);
+		write2HomePage("homepage.ftl", "index.html",
+				DateFormatUtils.format(new Date(), "yyyy-MM-dd"), homepage);
+		write2HomePage("aboutUs.ftl", "about.html",
+				DateFormatUtils.format(new Date(), "yyyy-MM-dd"), homepage);
+		write2HomePage("contactUs.ftl", "contact.html",
+				DateFormatUtils.format(new Date(), "yyyy-MM-dd"), homepage);
+		write2HomePage("overview.ftl", "overview.html",
+				DateFormatUtils.format(new Date(), "yyyy-MM-dd"), homepage);
+		write2HistoryPage("history.ftl", "ips-history.html", "ips");
+		write2HistoryPage("history.ftl", "sites-history.html", "sites");
+		write2HistoryPage("404.ftl", "404.html", "");
 	}
-	void write2HomePage(String templateName, String output, String date, HomePage homepage) {
+
+	void write2HomePage(String templateName, String output, String date,
+			HomePage homepage) {
 		try {
 			Configuration cfg = new Configuration();
-			cfg.setDirectoryForTemplateLoading(new File(SystemVar.templateFolder));
+			cfg.setDirectoryForTemplateLoading(new File(
+					SystemVar.templateFolder));
 			Template template = cfg.getTemplate(templateName);
 			StringWriter stringWriter = new StringWriter();
 			Map<String, Object> args = new HashMap<>();
@@ -70,7 +82,46 @@ public class SiteMaker {
 			} catch (TemplateException e) {
 				e.printStackTrace();
 			}
-			FileUtils.write(new File(SystemVar.htmlOutputFolder+output), stringWriter.toString());
+			File file = new File(SystemVar.htmlOutputFolder + output);
+			if (file.exists()) {
+				file.delete();
+			}
+			FileUtils.write(file, stringWriter.toString());
+			stringWriter.close();
+		} catch (IOException ignore) {
+			ignore.printStackTrace();
+		}
+	}
+
+	void write2HistoryPage(String templateName, String output, String type) {
+		try {
+			Configuration cfg = new Configuration();
+			cfg.setDirectoryForTemplateLoading(new File(
+					SystemVar.templateFolder));
+			Template template = cfg.getTemplate(templateName);
+			StringWriter stringWriter = new StringWriter();
+			Map<String, Object> args = new HashMap<>();
+			args.put("hrefType", type);
+			String title = "";
+			switch (type) {
+			case "ips":
+				title = "IP地址历史访问数据";
+				break;
+			case "sites":
+				title = "各网站历史访问数据";
+				break;
+			}
+			args.put("title", title);
+			try {
+				template.process(args, stringWriter);
+			} catch (TemplateException e) {
+				e.printStackTrace();
+			}
+			File file = new File(SystemVar.htmlOutputFolder + output);
+			if (file.exists()) {
+				file.delete();
+			}
+			FileUtils.write(file, stringWriter.toString());
 			stringWriter.close();
 		} catch (IOException ignore) {
 			ignore.printStackTrace();

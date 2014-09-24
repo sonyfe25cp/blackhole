@@ -38,60 +38,119 @@ public class SchedulingTasks {
 
 	static String dayFormat = "yyyy-MM-dd";
 	static String hourFormat = "yyyy-MM-dd-HH";
-	static String logNameFormat = "yyyy-MM-dd-HH-mm";
-	
+	static String logNameFormat = "yyyy-MM-dd-HH";
 
 	public static void main(String[] args) {
 		SchedulingTasks st = new SchedulingTasks();
 		st.parseLogsEveryHour();
 	}
-	
+
 	/**
-	 * 每小时自动解析，并生成对应的html
-	 * 每天的报告
+	 * 每小时自动解析，并生成对应的html 每天的报告
 	 */
 	@Scheduled(fixedRate = 60000)
 	public void parseLogsEveryHour() {
 		logger.debug("begin to parse logs for every hour");
 
-		Set<String> logs = getTotalFile(SystemVar.logFolder);
-		List<DNSLog> dnsLogsTotal = new ArrayList<>();//for whole day
+		// Set<String> totalLogs = getTotalFile(SystemVar.logFolder);
+		Set<String> todayFile = getTodayFile(SystemVar.logFolder);
+		List<DNSLog> dnsLogsTotal = new ArrayList<>();// for whole day
 		String today = DateFormatUtils.format(new Date(), dayFormat);
-		for (String date : logs) {
+
+		String thisHour = DateFormatUtils.format(new Date(), hourFormat);
+		int thisHourInt = Integer.parseInt(thisHour.replace(today + "-", ""));
+		int[] array = new int[thisHourInt];
+
+		for (String date : todayFile) {
 			String day = parseDayFromLogFormat(date);
 			String hour = parseHourFromLogFormat(date);
-			String siteOutput = pathForPerHour(day) + File.separator + hour + "-sites.html";
-			logger.debug(siteOutput);
+			String siteOutput = pathForPerHour(day) + File.separator + hour
+					+ "-sites.html";
+			logger.debug("准备生成页面：{}", siteOutput);
 			File siteOutputHtml = new File(siteOutput);
 			if (siteOutputHtml.exists()) {
 				logger.debug("{} 已存在，不需要重新算", siteOutput);
-//				continue;
+				// continue;
 			}
-			
-			String ipOutput = pathForPerHour(day) + File.separator + hour + "-ips.html";
+
+			String ipOutput = pathForPerHour(day) + File.separator + hour
+					+ "-ips.html";
 			logger.debug(ipOutput);
 			File ipOutputHtml = new File(ipOutput);
+			logger.debug("准备生成页面：{}", ipOutputHtml);
 			if (ipOutputHtml.exists()) {
 				logger.debug("{} 已存在，不需要重新算", ipOutput);
-//				continue;
+				// continue;
 			}
-			
+
 			String fullpath = SystemVar.logFolder + "log." + date;
 			logger.debug("解析日志文件：{}", fullpath);
 			List<DNSLog> dnsLogs = DNSLogParser.parse(fullpath);
-			if(today.equals(day)){
+
+			for (int i = 0; i < thisHourInt; i++) {// 统计每小时的个数
+				String tmpHour = day + "-" + (i < 10 ? "0" + i : i);
+				if (tmpHour.equals(hour)) {
+					array[i] = dnsLogs.size();
+				}
+			}
+			if (today.equals(day)) {
 				dnsLogsTotal.addAll(dnsLogs);
 			}
 			createPieAboutSites(day, siteOutputHtml, dnsLogs);
 			createPieAboutIps(day, ipOutputHtml, dnsLogs);
 		}
-		String siteOutput = pathForPerHour(today) + File.separator + today+ ".sites.html";
+		String siteOutput = pathForPerHour(today) + File.separator + today
+				+ ".sites.html";
 		createPieAboutSites(today, new File(siteOutput), dnsLogsTotal);
-		
-		String ipOutput = pathForPerHour(today) + File.separator + today+ ".ips.html";
+
+		String ipOutput = pathForPerHour(today) + File.separator + today
+				+ ".ips.html";
 		createPieAboutIps(today, new File(ipOutput), dnsLogsTotal);
-		
-		
+
+		String statOutput = pathForPerHour(today) + File.separator + today
+				+ ".stats.html";
+		createLineAboutStat(today, new File(statOutput), array);
+
+	}
+
+	private void createLineAboutStat(String today, File file, int[] array) {
+		StringBuilder dateSb = new StringBuilder();
+		StringBuilder dataSb = new StringBuilder();
+		dataSb.append("{name:'上网次数', data:[");
+		for (int i = 0; i < array.length; i++) {
+			String str = i < 10 ? "0" + i : i + "";
+			dateSb.append("'" + str + "',");
+			int data = array[i];
+			dataSb.append(data + ",");
+		}
+		dateSb.setLength(dateSb.length() - 1);
+		dataSb.setLength(dataSb.length() - 1);
+		dataSb.append("]}");
+
+		try {
+			Configuration cfg = new Configuration();
+			cfg.setDirectoryForTemplateLoading(new File(
+					SystemVar.templateFolder));
+			Template template = cfg.getTemplate("timesCount.ftl");
+			StringWriter stringWriter = new StringWriter();
+			Map<String, Object> args = new HashMap<>();
+			args.put("dates", dateSb.toString());
+			args.put("today", DateFormatUtils.format(new Date(), dayFormat));
+			args.put("title", "今日上网次数统计");
+			args.put("data", dataSb.toString());
+			try {
+				template.process(args, stringWriter);
+			} catch (TemplateException e) {
+				e.printStackTrace();
+			}
+			if(file.exists()){
+				file.delete();
+			}
+			FileUtils.write(file, stringWriter.toString());
+			stringWriter.close();
+		} catch (IOException ignore) {
+			ignore.printStackTrace();
+		}
 	}
 
 	private void createPieAboutSites(String day, File outputHtml,
@@ -107,9 +166,11 @@ public class SchedulingTasks {
 		}
 		logger.debug("站点json: {}", mostFavorSiteJson);
 		if (mostFavorSiteJson.length() > 0) {
-			write2File(mostFavorSiteJson, "perHour.ftl", outputHtml, 	"网址记录", dnsLogs);
+			write2File(mostFavorSiteJson, "perHour.ftl", outputHtml, "网址记录",
+					dnsLogs);
 		}
 	}
+
 	private void createPieAboutIps(String day, File outputHtml,
 			List<DNSLog> dnsLogs) {
 		sortByDate(dnsLogs);
@@ -123,16 +184,17 @@ public class SchedulingTasks {
 		}
 		logger.debug("IP json: {}", mostFavorSiteJson);
 		if (mostFavorSiteJson.length() > 0) {
-			write2File(mostFavorSiteJson, "perHour.ftl", outputHtml, 	"IP记录", dnsLogs);
+			write2File(mostFavorSiteJson, "perHour.ftl", outputHtml, "IP记录",
+					dnsLogs);
 		}
 	}
-	
+
 	String pathForPerHour(String day) {
-		return SystemVar.htmlOutputFolder + "pages" + File.separator + "day" +File.separator
-				+ day;
+		return SystemVar.htmlOutputFolder + "pages" + File.separator + "day"
+				+ File.separator + day;
 	}
-	
-	void sortByDate(List<DNSLog> dnsLogs){
+
+	void sortByDate(List<DNSLog> dnsLogs) {
 		Collections.sort(dnsLogs, new Comparator<DNSLog>() {
 
 			@Override
@@ -161,6 +223,12 @@ public class SchedulingTasks {
 		return res;
 	}
 
+	/**
+	 * 解析小时格式
+	 * 
+	 * @param date
+	 * @return
+	 */
 	private static String parseHourFromLogFormat(String date) {
 		String res = null;
 		try {
@@ -172,6 +240,12 @@ public class SchedulingTasks {
 		return res;
 	}
 
+	/**
+	 * 取出全部日志
+	 * 
+	 * @param folderPath
+	 * @return
+	 */
 	Set<String> getTotalFile(String folderPath) {
 		File folder = new File(folderPath);
 		Set<String> result = new HashSet<>();
@@ -185,11 +259,32 @@ public class SchedulingTasks {
 		return result;
 	}
 
+	/**
+	 * 取出今天的日志
+	 * 
+	 * @param folderPath
+	 * @return
+	 */
+	Set<String> getTodayFile(String folderPath) {
+		Set<String> today = new HashSet<>();
+		Set<String> totalFile = getTotalFile(folderPath);
+		String todayFormat = DateFormatUtils.format(new Date(), dayFormat);
+		for (String name : totalFile) {
+			String parseDayFromLogFormat = parseDayFromLogFormat(name);
+			if (parseDayFromLogFormat.equals(todayFormat)) {
+				today.add(name);
+				logger.debug("今天的日志：{}", name);
+			}
+		}
+		return today;
+	}
+
 	void write2File(String json, String templateName, File output,
 			String title, List<DNSLog> dnsLogs) {
 		try {
 			Configuration cfg = new Configuration();
-			cfg.setDirectoryForTemplateLoading(new File(SystemVar.templateFolder));
+			cfg.setDirectoryForTemplateLoading(new File(
+					SystemVar.templateFolder));
 			Template template = cfg.getTemplate(templateName);
 			StringWriter stringWriter = new StringWriter();
 			Map<String, Object> args = new HashMap<>();
@@ -197,7 +292,7 @@ public class SchedulingTasks {
 			args.put("today", DateFormatUtils.format(new Date(), dayFormat));
 			args.put("title", title);
 			int size = dnsLogs.size();
-			if(size > 1000){
+			if (size > 1000) {
 				dnsLogs = dnsLogs.subList(0, 1000);
 			}
 			args.put("dnsLogs", dnsLogs);
@@ -205,6 +300,9 @@ public class SchedulingTasks {
 				template.process(args, stringWriter);
 			} catch (TemplateException e) {
 				e.printStackTrace();
+			}
+			if(output.exists()){
+				output.delete();
 			}
 			FileUtils.write(output, stringWriter.toString());
 			stringWriter.close();

@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.omartech.mmaker.local.tools.SchedulingTasks;
-import com.omartech.mmaker.local.tools.T;
 import com.omartech.mmaker.utils.SystemVar;
 
 public class BootMachine {
@@ -29,7 +28,5 @@ public class BootMachine {
         System.out.println("gogo");
         
         SpringApplication.run(SchedulingTasks.class);
-        SpringApplication.run(T.class);
-        
     }
 }

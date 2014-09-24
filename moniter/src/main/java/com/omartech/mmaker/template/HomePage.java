@@ -11,6 +11,7 @@ public class HomePage {
 	private String body;
 	private String about;
 	private String contact;
+	private String overview;
 
 	public String getTitle() {
 		return title;
@@ -42,6 +43,14 @@ public class HomePage {
 
 	public void setContact(String contact) {
 		this.contact = contact;
+	}
+
+	public String getOverview() {
+		return overview;
+	}
+
+	public void setOverview(String overview) {
+		this.overview = overview;
 	}
 
 }
