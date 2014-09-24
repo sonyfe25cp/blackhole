@@ -59,8 +59,8 @@ public class SchedulingTasks {
 
 		String thisHour = DateFormatUtils.format(new Date(), hourFormat);
 		int thisHourInt = Integer.parseInt(thisHour.replace(today + "-", ""));
-		int[] array = new int[thisHourInt];
-
+		int[] sitesArray = new int[thisHourInt];
+		int[] ipsArray = new int[thisHourInt];
 		for (String date : todayFile) {
 			String day = parseDayFromLogFormat(date);
 			String hour = parseHourFromLogFormat(date);
@@ -90,7 +90,8 @@ public class SchedulingTasks {
 			for (int i = 0; i < thisHourInt; i++) {// 统计每小时的个数
 				String tmpHour = day + "-" + (i < 10 ? "0" + i : i);
 				if (tmpHour.equals(hour)) {
-					array[i] = dnsLogs.size();
+					sitesArray[i] = dnsLogs.size();
+					ipsArray[i] = countIps(dnsLogs);
 				}
 			}
 			if (today.equals(day)) {
@@ -109,24 +110,40 @@ public class SchedulingTasks {
 
 		String statOutput = pathForPerHour(today) + File.separator + today
 				+ ".stats.html";
-		createLineAboutStat(today, new File(statOutput), array);
+		createLineAboutStat(today, new File(statOutput), sitesArray, ipsArray);
 
 	}
+	
+	private int countIps(List<DNSLog> logs){
+		Set<String> set = new HashSet<>();
+		for(DNSLog log : logs){
+			String requestIp = log.getRequestIp();
+			set.add(requestIp);
+		}
+		return set.size();
+	}
 
-	private void createLineAboutStat(String today, File file, int[] array) {
-		StringBuilder dateSb = new StringBuilder();
+	private void createLineAboutStat(String today, File file, int[] sitesArray, int[] ipsArray) {
+		StringBuilder timeSb = new StringBuilder();
 		StringBuilder dataSb = new StringBuilder();
-		dataSb.append("{name:'上网次数', data:[");
-		for (int i = 0; i < array.length; i++) {
+		dataSb.append("{name:'网络请求次数', data:[");
+		for (int i = 0; i < sitesArray.length; i++) {
 			String str = i < 10 ? "0" + i : i + "";
-			dateSb.append("'" + str + "',");
-			int data = array[i];
+			timeSb.append("'" + str + "',");
+			int data = sitesArray[i];
 			dataSb.append(data + ",");
 		}
-		dateSb.setLength(dateSb.length() - 1);
+		timeSb.setLength(timeSb.length() - 1);
+		dataSb.setLength(dataSb.length() - 1);
+		dataSb.append("]},{name:'IP访问个数',data:[");
+		
+		for(int i = 0; i < ipsArray.length; i ++ ){
+			int data = ipsArray[i];
+			dataSb.append(data + ",");
+		}
 		dataSb.setLength(dataSb.length() - 1);
 		dataSb.append("]}");
-
+		
 		try {
 			Configuration cfg = new Configuration();
 			cfg.setDirectoryForTemplateLoading(new File(
@@ -134,7 +151,7 @@ public class SchedulingTasks {
 			Template template = cfg.getTemplate("timesCount.ftl");
 			StringWriter stringWriter = new StringWriter();
 			Map<String, Object> args = new HashMap<>();
-			args.put("dates", dateSb.toString());
+			args.put("dates", timeSb.toString());
 			args.put("today", DateFormatUtils.format(new Date(), dayFormat));
 			args.put("title", "今日上网次数统计");
 			args.put("data", dataSb.toString());
